@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Giphys</title>
+</head>
+
+<body>
+
+    <button data-sports="hockey">hockey</button>
+    <button data-sports="football">football</button>
+    <button data-sports="boxing">boxing</button>
+    <button data-sports="soccer">soccer</button>
+    <button data-sports="basketball">basketball</button>
+    <button data-sports="wrestling">wrestling</button>
+
+    <div id="gifs">
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"> </script>
+    <script type="text/javascript">
+
+        $("button").on("click", function () {
+
+            var sports = $(this).attr("data-sports");
+
+            var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + sports + "&api_key=hVxGBpUKGBoe3rIpvEYEnvZLCCVbhZko&limit=10";
+            console.log(queryURL);
+            $.ajax({
+                url: queryURL,
+                method: "GET"
+            })
+                .then(function (response) {
+                    console.log(queryURL);
+                    console.log(response);
+
+                    var results = response.data;
+                    for (i = 0; i < results.length; i++) {
+                        var SportsDiv = $("<div>");
+                        var p = $("<p>").text("Rating:" + results[i].rating);
+                        var SportsImage = $("<img>");
+                        SportsImage.attr("src", results[i].images.fixed_width_still.url);
+                        SportsImage.attr("still", results[i].images.fixed_width_still.url);
+                        SportsImage.attr("moving", results[i].images.fixed_height.url);
+                        SportsImage.attr("id", "gif-img")
+                        console.log("making sure this works", results[i].images.fixed_width_still.url);
+
+
+                        SportsDiv.append(p);
+                        SportsDiv.append(SportsImage);
+
+                        $("#gifs").prepend(SportsDiv)
+
+                    }
+
+
+                })
+
+        });
+        $(document).on("click", "#gif-img", function () {
+            console.log("you got clicked", $(this).attr("moving"))
+            console.log("you got clicked", $(this).attr("still"))
+            console.log("you got clicked", $(this).attr("src"))
+            if ($(this).attr("src") === $(this).attr("still")) {
+                $(this).attr("src", $(this).attr("moving"))
+
+            } else if ($(this).attr("src") === $(this).attr("moving")) {
+                $(this).attr("src", $(this).attr("still"))
+            }
+
+
+        });
+
+
+
+    </script>
+
+</body>
+
+</html>
